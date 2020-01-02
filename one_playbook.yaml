@@ -14,7 +14,7 @@
     instance_type: "t2.micro"
 
   tasks:
-  - name: create a VPC with dedicated tenancy and a couple of tags
+  - name: Create a VPC
     ec2_vpc_net:
       region: "{{ region }}"
       aws_access_key: "{{ aws_access_key }}"
@@ -32,7 +32,7 @@
       state:  present
     register: igw_result
 
-  - name: create VPC subnet
+  - name: Create VPC subnet
     ec2_vpc_subnet:
       region: "{{ region }}"
       aws_access_key: "{{ aws_access_key }}"
@@ -42,7 +42,7 @@
       map_public: yes
     register: subnet_result
 
-  - name: create ec2 VPC public subnet route table
+  - name: Create ec2 VPC route table
     ec2_vpc_route_table:
       region: "{{ region }}"
       aws_access_key: "{{ aws_access_key }}"
@@ -55,7 +55,7 @@
           gateway_id: "{{ igw_result.gateway_id }} "
     register: route_results
 
-  - name: create ec2 security group
+  - name: Create ec2 security group
     ec2_group:
       region: "{{ region }}"
       aws_access_key: "{{ aws_access_key }}"
