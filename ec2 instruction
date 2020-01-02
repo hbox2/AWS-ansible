@@ -1,0 +1,56 @@
+1.Create AWS account
+2. In the previously created AWS account, you need to create a user. 
+I use the region us-east-1 so the link will be like this:
+
+https://console.aws.amazon.com/iam/home?region=us-east-1#/users
+
+Click "Add user" and enter a username. Install checkbox opposite "Programmatic access" - this is necessary to obtain AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY.These keys are required to run our playbooks without asking for a username and password.
+
+
+Then click "Attach existing policices directly" and install checkbox opposite "AmazonEC2FullAccess".Then click "Create user".
+
+You will see Access key ID and Secret access key for your this user. Copy them somewhere they will come in handy.
+
+3. Install ansible (Gentoo: emerge -avq ansible,Debian/Ubuntu: apt install ansible, RedHat/Centos: yum install ansible)
+
+4. At a command prompt, run:
+pip install --user boto 
+pip install --user boto3
+pip install --user botocore
+pip install --user ansible 
+
+And check python at a command prompt:
+python
+import boto
+import boto3
+import botocore 
+
+5. Trying to connect:
+Download ec2.ini from official link :
+https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/ec2.ini
+
+Download ec2.py from official link:
+https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/ec2.py
+(and chmod +x ec2.py)
+
+Please edit ec2.ini and uncomment this line:
+elasticache = False
+
+Create a .aws (dot aws) directory in your user's home directory and create a "credentials" file inside it:
+[default]                                                                                     
+aws_access_key_id = Your_access_key                                                      aws_secret_access_key = You_secret_access
+
+And try run:
+./ec2.py --list 
+
+You should see the output of all running instances, etc.
+
+4.Edit playbook:
+To one_playbook.yaml file insert:
+
+---
+aws_access_key_id = 'Your_access_key'
+aws_secret_access_key = 'You_secret_access'
+
+5. Run our playbook
+ansible-playbook one_playbook.yaml
